@@ -72,7 +72,7 @@ function AuthenticationForm(props: FormData) {
             </IconButton>
             
             <Link to={routePath}>
-                <Typography right-align component="h6">
+                <Typography component="h6">
                     { routeText }
                 </Typography>
             </Link>

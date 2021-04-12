@@ -1,5 +1,6 @@
 import {
-  Link
+  Link,
+  BrowserRouter as Router
 } from "react-router-dom";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface HeaderProps {
-  toggleSidebar: any
+  toggleSidebar: (isOpen: boolean) => void;
 }
 
 
@@ -35,16 +36,18 @@ function Header(props : HeaderProps) {
   
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => toggleSidebar(true)} className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Link to="/login"  style={{ textDecoration: 'none', color: "white"}}>
-            <Button color="inherit">Login</Button>
-          </Link>
-        </Toolbar>
-      </AppBar>
+      <Router>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" onClick={() => toggleSidebar(true)} className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            <Link data-testid="drawer-toggler" to="/login" style={{ textDecoration: 'none', color: "white", marginLeft: "auto"}}>
+              <Button color="inherit">Login</Button>
+            </Link>
+          </Toolbar>
+        </AppBar>
+      </Router>
     </div>
   );
 }
