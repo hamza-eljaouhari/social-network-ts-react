@@ -27,15 +27,15 @@ function App() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  function toggleSidebar(){
-    setOpen(!open);
+  function toggleSidebar(isOpen: boolean){
+    setOpen(isOpen);
   }
   
   return (
     <div className="App">
       <Router>
         <Header toggleSidebar={toggleSidebar}/>
-        <Sidebar open={open} />
+        <Sidebar open={open} setOpen={toggleSidebar}/>
         <Switch>
           <Route path="/register">
             <Register />

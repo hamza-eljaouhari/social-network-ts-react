@@ -21,14 +21,15 @@ const useStyles = makeStyles({
 });
 
 interface SidebarProps {
-    open: boolean
+    open: boolean,
+    setOpen: (isOpen: boolean) => void;
 }
 
 function Sidebar(props: SidebarProps) {
     
   const classes = useStyles();
 
-  const { open } = props;
+  const { open, setOpen } = props;
 
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
@@ -40,6 +41,8 @@ function Sidebar(props: SidebarProps) {
     ) {
       return;
     }
+    
+    setOpen(open);
   };
 
   const list = () => (

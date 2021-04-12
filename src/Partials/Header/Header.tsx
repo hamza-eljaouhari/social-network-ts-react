@@ -37,7 +37,7 @@ function Header(props : HeaderProps) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" onClick={toggleSidebar} className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" onClick={() => toggleSidebar(true)} className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Link to="/login"  style={{ textDecoration: 'none', color: "white"}}>
