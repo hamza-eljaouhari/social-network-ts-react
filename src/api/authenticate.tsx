@@ -1,5 +1,4 @@
 import axios from '../axios';
-import { AxiosResponse } from "axios";
 
 interface Credentials {
     email: string,
@@ -24,6 +23,20 @@ const authenticator = {
             email: user.email,
             password: user.password,
             username: user.username
+        });
+    },
+    checkIfAuthenticated: async (): Promise<any> => {
+
+        const token = localStorage.getItem("token");
+
+        if(token === undefined){
+            return Promise.reject(false);
+        }
+        
+        return await axios.post("/user/checkJWT", {
+            headers: {
+                'Authorization': token
+            }
         });
     }
 }

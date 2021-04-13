@@ -1,0 +1,15 @@
+@keyframes infinite-spinning {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#spinner {
+    -webkit-animation: infinite-spinning 5s infinite; /* Safari 4+ */
+    -moz-animation:    infinite-spinning 5s infinite; /* Fx 5+ */
+    -o-animation:      infinite-spinning 5s infinite; /* Opera 12+ */
+    animation:         infinite-spinning 5s infinite; /* IE 10+, Fx 29+ */
+}

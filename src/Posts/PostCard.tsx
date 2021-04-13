@@ -11,18 +11,24 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import imageHeader from "../assets/bart-article.jpg";
+import formatMySQLDate from "../utils/formatMySQLDate";
+import VoteButtons from '../Vote/VoteButtons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      minWidth: 300,
       maxWidth: 300,
-      marginBottom: "30px"
+      height: 450,
+      marginBottom: "30px",
+      display: 'inline-block',
+      float: "left",
+      margin: "20px"
     },
     media: {
       height: 0,
@@ -44,20 +50,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function Post() {
+interface PostProps {
+  post: any,
+  setVote: any
+}
+
+function Post(props: PostProps) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+
+  const { post, setVote } = props;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  function callSetVoteParent(vote: any){
+    setVote(vote);
+  }
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            R
+            {
+              post.owner.id
+            }
           </Avatar>
         }
         action={
@@ -65,8 +84,8 @@ function Post() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={"From : " + post.owner.email} 
+        subheader={"Created on : " + formatMySQLDate(post.createdAt) + " and updated on " + formatMySQLDate(post.updatedAt)}
       />
       <CardMedia
         className={classes.media}
@@ -75,14 +94,13 @@ function Post() {
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
+          {
+            post.title
+          }
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
+        <VoteButtons postId={post.id} setVote={(vote: any) => callSetVoteParent(vote)} vote={post.vote}></VoteButtons>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>

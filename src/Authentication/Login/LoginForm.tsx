@@ -39,6 +39,7 @@ function LoginForm() {
         
         authenticator.authenticate(credentials).then((response: any) => {
             history.push("/home");
+            localStorage.setItem("token", response.data.access_token);
         }).catch((error: any) => {
             if(error.response) {
                 console.log(error.response.data);

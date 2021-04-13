@@ -1,4 +1,4 @@
-import PostsList from '../Posts/PostsList'
+import PostsCardsList from '../Posts/PostsCardsList'
 
 interface HomeProps{
     className: string
@@ -9,7 +9,7 @@ function Home(props : HomeProps){
 
     return(
         <section className={className}>
-            <PostsList></PostsList>
+            <PostsCardsList></PostsCardsList>
         </section>
     );
 }
