@@ -38,7 +38,6 @@ function LoginForm() {
         event.preventDefault();
         
         authenticator.authenticate(credentials).then((response: any) => {
-            console.log(response);
             history.push("/home");
         }).catch((error: any) => {
             if(error.response) {

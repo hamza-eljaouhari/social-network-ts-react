@@ -12,15 +12,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-
 function PostsList(){
     const classes = useStyles();
 
     return (
         <section className={classes.root}>
             {
-                [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3].map((id) => {
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) => {
                     return <Post key={id}></Post>
                 })
             }

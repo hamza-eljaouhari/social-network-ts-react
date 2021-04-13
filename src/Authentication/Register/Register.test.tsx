@@ -11,6 +11,7 @@ test("should create a new account for the client", async () => {
     const user = {
         email: "hamza.eljaouhari.1995@gmail.com",
         password: "123456789",
+        username: "username"
     };
 
     const expected = {
@@ -26,13 +27,10 @@ test("should create a new account for the client", async () => {
         return Promise.resolve(expected);
     });
 
-    authenticator.authenticate(user).then((response) => {
+    authenticator.register(user).then((response) => {
         expect(response).toEqual(expected);
         expect(mockedAxios.post).toHaveBeenCalledWith(user);
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     })
 
-    // expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-
 });
-
