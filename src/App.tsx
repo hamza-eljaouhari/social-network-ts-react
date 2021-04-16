@@ -73,16 +73,10 @@ function App(props : AppProps) {
             {/* <Route path="/posts/:id">
               <PostArticle className={classes.root}/>
             </Route> */}
-            <Route path="/post">
+            <Route path="/posts/:id">
               <PostEditor />
             </Route>
-            <Route path="/post/:id">
-              <PostEditor />
-            </Route>
-            <Route path="/community">
-              <CommunityEditor />
-            </Route>
-            <Route path="/community/:id">
+            <Route path="/communities/:id">
               <CommunityEditor/>
             </Route>
           </Switch>

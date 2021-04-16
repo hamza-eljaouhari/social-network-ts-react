@@ -8,6 +8,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ForumIcon from '@material-ui/icons/Forum';
 
+import communitiesApi from "../../api/communities";
+import postsApi from "../../api/posts";
+
+import handleError from "../../utils/handleError";
+
+import { useHistory } from "react-router-dom";
+
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
@@ -40,7 +47,11 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function CreateButton() {
+  const history = useHistory();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -49,6 +60,31 @@ export default function CreateButton() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function createCommunity(){
+    setIsLoading(true);
+  
+    communitiesApi.create().then((response) => {
+        handleClose();
+        setIsLoading(false);
+        history.push("/communities/" + response.data.id)
+    }).catch((error) => {
+        handleError(error)
+    })
+  }
+
+  function createPost(){
+    handleClose();
+    setIsLoading(true);
+  
+    postsApi.create().then((response) => {
+        console.log(response)
+        setIsLoading(false);
+        history.push("/posts/" + response.data.id)
+    }).catch((error) => {
+        handleError(error)
+    })
+  }
 
   return (
     <>
@@ -68,13 +104,13 @@ export default function CreateButton() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
+        <StyledMenuItem onClick={createCommunity}>
           <ListItemIcon>
             <ForumIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Community" />
         </StyledMenuItem>
-        <StyledMenuItem>
+        <StyledMenuItem onClick={createPost}>
           <ListItemIcon>
             <PostAddIcon fontSize="small" />
           </ListItemIcon>

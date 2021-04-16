@@ -2,7 +2,7 @@ import Editor from "../../Partials/Editor/Editor";
 
 function CommunityEditor(){
     return(
-        <Editor></Editor>
+        <Editor entity="communities"></Editor>
     )
 }
 

@@ -4,16 +4,26 @@ import Toolbar from '@material-ui/core/Toolbar';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
 import IconButton from '@material-ui/core/IconButton';
-import React from "react";
+import React, { useEffect } from "react";
 import LinkIcon from '@material-ui/icons/Link';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import postsApi from "../../api/posts";
+import handleError from '../../utils/handleError';
+import UpdatePostApiRequest from "../../Types/UpdatePostApiRequest";
+import ErrorIcon from '@material-ui/icons/Error';
+
+import {
+    withRouter
+} from "react-router-dom";
+
 const fontSize = 24;
 const ITEM_HEIGHT = 48;
-
 
 const options = [
     {
@@ -45,6 +55,11 @@ const options = [
         name: "Heading 6",
         heading: "<h6>",
         tag: <h6>Heading 6</h6>
+    },
+    {
+        name: "Paragraph",
+        heading: "<p>",
+        tag: <p>Paragraph</p>
     }
 ];
 
@@ -72,19 +87,31 @@ const useStyles = makeStyles({
     },
     editingToolbar: {
         transition: "0.5s all"
+    },
+    status: {
+        marginLeft: "auto"
     }
 });
   
-function Editor(){
+function Editor(props: any){
     const classes = useStyles();
-    const [title, setTitle] = React.useState<string>("test");
 
-    const contentRef = React.createRef<HTMLInputElement>();
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [isSaved, setIsSaved] = React.useState<boolean>(true);
+
+    var contentRef = React.createRef<HTMLDivElement>();
+    var titleRef = React.createRef<HTMLDivElement>();
     const toolbarRef = React.createRef<HTMLInputElement>();
 
     const [isContentEditable, setIsContentEditable] = React.useState<boolean>(false);
     const [isTitleEditable, setIsTitleEditable] = React.useState<boolean>(false);
-
+    
+    const [title, setTitle] = React.useState<string>("");
+    const [content, setContent] = React.useState<string>("");
+    
+    const [isTitleChanged, setIsTitleChanged] = React.useState<boolean>(false);
+    const [isContentChanged, setIsContentChanged] = React.useState<boolean>(false);
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -97,12 +124,40 @@ function Editor(){
     };
     
     function handleTitleChange(event: React.FormEvent<HTMLDivElement>){
-        if(event.currentTarget.innerText.length > 10){
-            event.preventDefault();
-            return;
-        }
-
         setTitle(event.currentTarget.innerText);
+    }
+
+    function handleContentChange(event: React.FormEvent<HTMLDivElement>){
+
+        setContent(event.currentTarget.innerHTML);
+    }
+
+    useEffect(() => {
+        const contentDiv = document.getElementById("content");
+        setContent(props.entity.content);
+
+        if(contentDiv) contentDiv.innerHTML = props.entity.content || "";
+    }, [props.entity])
+
+    function savePost(){
+        setIsLoading(true);
+
+        const post = {
+            id: props.entity.id,
+            title: title,
+            content: content,
+            communityId: 7
+        };
+
+        postsApi.edit(post).then((response) => {
+            console.log(response);
+            setIsSaved(true);
+        }).catch((error) => {
+            handleError(error);
+            setIsSaved(false);
+        }).finally(() => {
+            setIsLoading(false);
+        })
     }
 
     function editContent(): void{
@@ -112,7 +167,6 @@ function Editor(){
     function onBlurContent(): void{
         setIsContentEditable(false)
     }
-
     
     function editTitle(): void{
         setIsTitleEditable(true)
@@ -124,12 +178,29 @@ function Editor(){
 
     function focusOnContentOrDeleteTitleCharacters(event: React.KeyboardEvent<HTMLElement>) : void{
 
-        if(event.key === "Enter"){
+        if(event.key === "Enter" || event.key === "Tab"){
+            setIsContentEditable(true)
             contentRef?.current?.focus();
             event.preventDefault();
         }
 
-        if(event.currentTarget.innerText.length > 5 && event.key != "Backspace"){
+        if(event.currentTarget.innerText.length > 20 && event.key != "Backspace"){
+            event.preventDefault();
+        }
+    }
+
+    function returnToTitleFromContent(event: React.KeyboardEvent<HTMLElement>) : void{
+        const contentText = contentRef?.current?.textContent;
+
+        var contentBoxHasText = false;
+
+        if(contentText){
+            contentBoxHasText = contentText.length > 0;
+        }
+
+        if(event.key === "Backspace" && !contentBoxHasText){
+            setIsTitleEditable(true);
+            titleRef?.current?.focus();
             event.preventDefault();
         }
     }
@@ -153,8 +224,37 @@ function Editor(){
 
     function formatHeading(heading: string | undefined){
         document.execCommand("formatBlock", false, heading);
-        alert(heading)
         handleCloseTitleMenu();
+    }
+
+    var status = null
+
+    if(isLoading){
+        status = (
+            <Button className={classes.status} variant="contained" color="primary">
+                Saving...
+            </Button>
+        );
+    }else{
+        if(isSaved){
+            status = (
+                <>
+                    <Button onClick={savePost} className={classes.status} variant="contained" color="primary">
+                        Save
+                        <SaveIcon></SaveIcon>
+                    </Button>
+                </>
+            );
+        }else{
+            status = (
+                <>
+                    <Button className={classes.status} variant="contained" color="primary">
+                        Unauthorized to save
+                        <ErrorIcon></ErrorIcon>
+                    </Button>
+                </>
+            );
+        }
     }
 
     return(
@@ -199,22 +299,33 @@ function Editor(){
                         </MenuItem>
                     ))}
                 </Menu>
+                {
+                    status
+                }
             </Toolbar>
             <div id="title"
                 onMouseOver={editTitle}
+                ref={titleRef}
                 onInput={handleTitleChange}
                 className={`${classes.contentEditable} ${classes.title}`} contentEditable={isTitleEditable}
-                onKeyDown={focusOnContentOrDeleteTitleCharacters}>
+                onKeyDown={focusOnContentOrDeleteTitleCharacters}
+                suppressContentEditableWarning={true}>
+                    {
+                        props.entity.title
+                    }
             </div>
             
             <div id="content"
                 onMouseOver={editContent} 
+                onInput={handleContentChange}
                 className={`${classes.contentEditable} ${classes.content}`} 
                 contentEditable={isContentEditable}
-                ref={contentRef}>
+                ref={contentRef}
+                onKeyDown={returnToTitleFromContent}
+                >
             </div>
         </article>
     );
 }
 
-export default Editor;
+export default withRouter(Editor);

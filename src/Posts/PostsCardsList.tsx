@@ -40,7 +40,7 @@ function PostsCardsList(){
     }
 
     useEffect(() => {
-      postsApi.getAllPosts().then((response) =>{
+      postsApi.getAll().then((response) =>{
         setPosts(response.data.posts);
       }).catch((error) => {
         console.log(error);

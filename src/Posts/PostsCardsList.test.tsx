@@ -37,7 +37,7 @@ test("should create a new account for the client", () => {
         return Promise.resolve(expected);
     });
 
-    postsApi.getAllPosts().then((response) => {
+    postsApi.getAll().then((response) => {
         expect(response).toEqual(expected);
         expect(mockedAxios.post).toHaveBeenCalledWith('/user/feed');
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
