@@ -1,13 +1,10 @@
 import axios from '../axios';
+import getAuthenticationToken from '../utils/getAuthenticationToken'
 
 const postsApi = {
     getAllPosts: async (): Promise<any> => {
 
-        return await axios.get("/user/feed", {
-            headers: {
-                "Authorization": localStorage.getItem("token")
-            }
-        });
+        return await axios.get("/user/feed");
     },
 }
 

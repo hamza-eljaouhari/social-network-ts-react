@@ -22,11 +22,17 @@ function PostsCardsList(){
         if(post.id === vote.postId){
           var newPost = {...post};
 
-          newPost.vote = vote;
-          console.log(newPost)
+          newPost.vote = {
+            id: vote.id,
+            upOrDown: vote.upOrDown,
+            createdAt: vote.createdAt
+          };
+
+          console.log("newPost", newPost)
 
           return newPost;
         }
+
         return post;
       })
 

@@ -1,14 +1,9 @@
 import PostsCardsList from '../Posts/PostsCardsList'
 
-interface HomeProps{
-    className: string
-}
 
-function Home(props : HomeProps){
-    const { className } = props; 
-
+function Home(){
     return(
-        <section className={className}>
+        <section>
             <PostsCardsList></PostsCardsList>
         </section>
     );

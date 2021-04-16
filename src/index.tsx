@@ -16,9 +16,7 @@ const store = createStore(rootReducer)
 ReactDOM.render(
   <Router>
     <Provider store={store}>
-      <React.StrictMode>
         <App />
-      </React.StrictMode>
     </Provider>
   </Router>,
   document.getElementById('root')

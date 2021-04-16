@@ -1,6 +1,6 @@
 
 const routerLinkStyleConfiguration = () : any => {
-    return { textDecoration: 'none', color: "white", marginLeft: "auto"};
+    return { textDecoration: 'none', color: "white"};
 }
 
 export default routerLinkStyleConfiguration;

@@ -1,7 +1,6 @@
 import IconButton from '@material-ui/core/IconButton';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import React, { useEffect } from 'react';
 import votesApi from '../api/votes';
 
 interface VoteButtonsProps {
@@ -14,17 +13,29 @@ function VoteButtons(props: VoteButtonsProps){
 
     const { postId, vote, setVote } = props;
     
-    function registerVote(upOrDown: number){
-        votesApi.vote({
-            up_or_down: upOrDown,
+    function registerVote(clickedUpOrDown: number){
+        if(vote.upOrDown === clickedUpOrDown){
+            addVote(0);
+        }else{
+            addVote(clickedUpOrDown);
+        }
+        
+    }
+
+    function addVote(clickedUpOrDown: number){
+        votesApi.addVote({
+            up_or_down: clickedUpOrDown,
             subject_id: postId,
             subject_type: 'posts'
         }).then((response) => {
 
             setVote({
-                upOrDown: upOrDown,
-                postId: postId,
+                id: response.data.id,
+                upOrDown: response.data.up_or_down,
+                postId: response.data.subject_id,
+                createdAt: response.data.createdAt
             });
+
         }).catch((error) => {
             console.log(error)
         })

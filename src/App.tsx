@@ -10,12 +10,16 @@ import Header from './Partials/Header/Header';
 import Register from './Authentication/Register/Register';
 import Login from './Authentication/Login/Login';
 import Home from './Home/Home';
+import PostArticle from './Posts/Post/Article';
 import Sidebar from './Partials/Sidebar/Sidebar';
 
 import { withRouter } from "react-router-dom";
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import authenticator from "./api/authenticate";
+
+import PostEditor from "./Editor/Post/PostEditor";
+import CommunityEditor from "./Editor/Community/CommunityEditor";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,21 +56,38 @@ function App(props : AppProps) {
   }, [props.history])
   
   return (
-      <div className="App">
+      <main className="App">
         <Header toggleSidebar={toggleSidebar}/>
         <Sidebar open={open} setOpen={toggleSidebar}/>
-        <Switch>
-          <Route path="/register">
-            <Register />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/home">
-            <Home className={classes.root}/>
-          </Route>
-        </Switch>
-      </div>
+        <section className={classes.root}>
+          <Switch>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/home">
+              <Home/>
+            </Route>
+            {/* <Route path="/posts/:id">
+              <PostArticle className={classes.root}/>
+            </Route> */}
+            <Route path="/post">
+              <PostEditor />
+            </Route>
+            <Route path="/post/:id">
+              <PostEditor />
+            </Route>
+            <Route path="/community">
+              <CommunityEditor />
+            </Route>
+            <Route path="/community/:id">
+              <CommunityEditor/>
+            </Route>
+          </Switch>
+        </section>
+      </main>
   );
 }
 

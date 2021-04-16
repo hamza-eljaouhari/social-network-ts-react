@@ -12,10 +12,15 @@ import isAuthenticated from '../../utils/isAuthenticated';
 
 import routerLinkStyleConfiguration from '../../utils/routerLinkStyleConfiguration'
 
+import CreateButton from "../CreateButton/CreateButton";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+    },
+    toolbar: {
+      justifyContent: "space-between"
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -60,17 +65,20 @@ function Header(props : HeaderProps) {
 
   return (
     <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
+        <AppBar position="static" >
+          <Toolbar className={classes.toolbar}>
             <IconButton edge="start" onClick={() => toggleSidebar(true)} className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            {
-              chatLink()
-            }
-            {
-              loginLink()
-            }
+              <div>
+                <CreateButton></CreateButton>
+                {
+                  chatLink()
+                }
+                {
+                  loginLink()
+                }
+              </div>
           </Toolbar>
         </AppBar>
     </div>

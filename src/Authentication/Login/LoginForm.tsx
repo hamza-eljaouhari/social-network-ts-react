@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
 import authenticator from "../../api/authenticate";
+import handleError from "../../utils/handleError";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,17 +42,7 @@ function LoginForm() {
             history.push("/home");
             localStorage.setItem("token", response.data.access_token);
         }).catch((error: any) => {
-            if(error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-            // The request was made but no response was received
-                console.log(error.request);
-            } else {
-            // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
+            handleError(error);
         });
     }
     
