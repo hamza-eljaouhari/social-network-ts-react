@@ -1,68 +1,17 @@
-import { makeStyles } from '@material-ui/core/styles';
-import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
-import Toolbar from '@material-ui/core/Toolbar';
-import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
-import FormatBoldIcon from '@material-ui/icons/FormatBold';
-import IconButton from '@material-ui/core/IconButton';
 import React, { useEffect } from "react";
-import LinkIcon from '@material-ui/icons/Link';
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
-
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { makeStyles } from '@material-ui/core/styles';
 
 import postsApi from "../api/posts";
 import handleError from '../utils/handleError';
-import ErrorIcon from '@material-ui/icons/Error';
+
+import EditorToolbar from "./EditorToolbar";
 
 import {
     withRouter
 } from "react-router-dom";
 
-import SelectCommunity from "../Partials/SelectCommunity/Selectcommunity";
 
-const fontSize = 24;
-const ITEM_HEIGHT = 48;
-
-const options = [
-    {
-        name: "Heading 1",
-        heading: "<h1>",
-        tag: <h1>Heading 1</h1>
-    },
-    {
-        name: "Heading 2",
-        heading: "<h2>",
-        tag: <h2>Heading 2</h2>
-    },
-    {
-        name: "Heading 3",
-        heading: "<h3>",
-        tag: <h3>Heading 3</h3>
-    },
-    {
-        name: "Heading 4",
-        heading: "<h4>",
-        tag: <h4>Heading 4</h4>
-    },
-    {
-        name: "Heading 5",
-        heading: "<h5>",
-        tag: <h5>Heading 5</h5>
-    },
-    {
-        name: "Heading 6",
-        heading: "<h6>",
-        tag: <h6>Heading 6</h6>
-    },
-    {
-        name: "Paragraph",
-        heading: "<p>",
-        tag: <p>Paragraph</p>
-    }
-];
+const FONT_SIZE = 24;
 
 const useStyles = makeStyles({
     contentEditable: {
@@ -72,19 +21,19 @@ const useStyles = makeStyles({
         outline: "none",
         marginBottom: 10,
         padding: "5px 30px",
-        fontSize: fontSize,
+        fontSize: FONT_SIZE,
         transition: "0.5s all",
         '&:hover': {
             background: "rgba(232, 232, 232, 0.25)",
         }
     },
     title: {
-        fontSize: 28
+        fontSize: FONT_SIZE
     },
     content: {
         minHeight: 300,
         lineHeight: "32px",
-        fontSize: fontSize
+        fontSize: FONT_SIZE
     },
     editingToolbar: {
         transition: "0.5s all"
@@ -103,26 +52,15 @@ function Editor(props: any){
 
     var contentRef = React.createRef<HTMLDivElement>();
     var titleRef = React.createRef<HTMLDivElement>();
-    const toolbarRef = React.createRef<HTMLInputElement>();
 
     const [isContentEditable, setIsContentEditable] = React.useState<boolean>(false);
     const [isTitleEditable, setIsTitleEditable] = React.useState<boolean>(false);
     
+    const [id, setId] = React.useState<number>(0);
     const [title, setTitle] = React.useState<string>("");
     const [content, setContent] = React.useState<string>("");
-    const [communityId, setCommunityId] = React.useState<number>(1);
-    
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const [communityId, setCommunityId] = React.useState<number>(0);
 
-    const showHeadings = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleCloseTitleMenu = () => {
-        setAnchorEl(null);
-    };
-    
     function handleTitleChange(event: React.FormEvent<HTMLDivElement>){
         setTitle(event.currentTarget.innerText);
     }
@@ -132,17 +70,24 @@ function Editor(props: any){
     }
 
     useEffect(() => {
-        const contentDiv = document.getElementById("content");
-        setContent(props.entity.content);
-        if(contentDiv) contentDiv.innerHTML = props.entity.content || "";
-        setCommunityId(props.entity.communityId);
-    }, [props.entity])
+        const { id } = props.match.params;
+        postsApi.getById(id).then((response) => {
+            const contentDiv = document.getElementById("content");
+            setId(response.data.id);
+            setTitle(response.data.title || response.data.name);
+            setContent(response.data.content ||"");
+            if(contentDiv) contentDiv.innerHTML = response.data.content || "";
+            setCommunityId(response.data.communityId);
+        }).catch((error) => {
+            handleError(error);
+        })
+    }, [])
 
     function savePost(){
         setIsLoading(true);
 
         const post = {
-            id: props.entity.id,
+            id: id,
             title: title,
             content: content,
             community_id: communityId
@@ -202,121 +147,23 @@ function Editor(props: any){
             event.preventDefault();
         }
     }
-
-    function formatAlignLeft(){
-        document.execCommand("justifyLeft", false, undefined);
-    }
-
-    function formatAlignCenter(){
-        document.execCommand("justifyCenter", false, undefined);
-    }
-
-    function formatBold(){
-        document.execCommand("bold", false, undefined);
-    }
-
-    function formatLink(){
-        let url = prompt("Enter the link here: ", "http:\/\/") || undefined;
-        document.execCommand("createLink", false, url);
-    }
-
-    function formatHeading(heading: string | undefined){
-        document.execCommand("formatBlock", false, heading);
-        handleCloseTitleMenu();
-    }
-
-    var status = null
-
-    if(isLoading){
-        status = (
-            <Button variant="contained" color="primary">
-                Saving...
-            </Button>
-        );
-    }else{
-        if(isSaved){
-            status = (
-                <>
-                    <Button onClick={savePost} variant="contained" color="primary">
-                        Save
-                        <SaveIcon></SaveIcon>
-                    </Button>
-                </>
-            );
-        }else{
-            status = (
-                <>
-                    <Button variant="contained" color="primary">
-                        Unauthorized to save
-                        <ErrorIcon></ErrorIcon>
-                    </Button>
-                </>
-            );
-        }
-    }
-
     return(
         <article>
-            <Toolbar ref={toolbarRef}>
-                <IconButton onClick={formatAlignLeft} aria-label="format align left" color="inherit">
-                    <FormatAlignLeftIcon />
-                </IconButton>
-                <IconButton onClick={formatAlignCenter} aria-label="format align center" color="inherit">
-                    <FormatAlignCenterIcon />
-                </IconButton>
-                <IconButton onClick={formatBold} aria-label="format bold" color="inherit">
-                    <FormatBoldIcon/>
-                </IconButton>
-                <IconButton onClick={formatLink} aria-label="create link" color="inherit">
-                    <LinkIcon/>
-                </IconButton>
-                <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={showHeadings}
-                >
-                    <MoreVertIcon />
-                </IconButton>
-                <Menu
-                    id="long-menu"
-                    anchorEl={anchorEl}
-                    keepMounted 
-                    open={open}
-                    onClose={handleCloseTitleMenu}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
-                        },
-                    }}
-                >
-                    {options.map((option) => (
-                        <MenuItem key={option.name} selected={option.name === 'Heading 1'} onClick={() : void => formatHeading(option.heading)}>
-                            {option.tag}
-                        </MenuItem>
-                    ))}
-                </Menu>
-                <div className={classes.leftToolbar}>
-                    <SelectCommunity communityId={communityId} setCommunityId={setCommunityId}></SelectCommunity>
-                    {
-                        status
-                    }
-                </div>
-{
-    communityId
-}
-            </Toolbar>
-            <div id="title"
+            <EditorToolbar 
+                isSaved={isSaved}
+                isLoading={isLoading}
+                communityId={communityId}
+                setCommunityId={setCommunityId}
+                savePost={savePost}
+                ></EditorToolbar>
+            <div 
+                id="title"
                 onMouseOver={editTitle}
                 ref={titleRef}
                 onInput={handleTitleChange}
                 className={`${classes.contentEditable} ${classes.title}`} contentEditable={isTitleEditable}
                 onKeyDown={focusOnContentOrDeleteTitleCharacters}
                 suppressContentEditableWarning={true}>
-                    {
-                        props.entity.title
-                    }
             </div>
             
             <div id="content"

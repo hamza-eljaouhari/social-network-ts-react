@@ -56,7 +56,7 @@ function SelectCommunity(props: any){
                 id: 'name-native-required',
             }}
             >
-            <option aria-label="None" value="0">Unacategorized</option>
+            <option aria-label="Uncategorized" value="0">Unacategorized</option>
             {
                 communities.map((community: {id: number, name: string, postCount: number}) => {
                     return <option key={community.id} value={community.id}>{community.name}</option>
