@@ -2,5 +2,5 @@ export default interface UpdatePostApiRequest {
     id: number,
     title: string,
     content: string,
-    communityId: number
+    community_id: number
 }

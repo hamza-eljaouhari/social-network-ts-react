@@ -15,12 +15,13 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import postsApi from "../../api/posts";
 import handleError from '../../utils/handleError';
-import UpdatePostApiRequest from "../../Types/UpdatePostApiRequest";
 import ErrorIcon from '@material-ui/icons/Error';
 
 import {
     withRouter
 } from "react-router-dom";
+
+import SelectCommunity from "../../Partials/SelectCommunity/Selectcommunity";
 
 const fontSize = 24;
 const ITEM_HEIGHT = 48;
@@ -88,8 +89,9 @@ const useStyles = makeStyles({
     editingToolbar: {
         transition: "0.5s all"
     },
-    status: {
-        marginLeft: "auto"
+    leftToolbar: {
+        marginLeft: "auto",
+        lineHeight: "75px"
     }
 });
   
@@ -108,9 +110,7 @@ function Editor(props: any){
     
     const [title, setTitle] = React.useState<string>("");
     const [content, setContent] = React.useState<string>("");
-    
-    const [isTitleChanged, setIsTitleChanged] = React.useState<boolean>(false);
-    const [isContentChanged, setIsContentChanged] = React.useState<boolean>(false);
+    const [communityId, setCommunityId] = React.useState<number>(1);
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -128,15 +128,14 @@ function Editor(props: any){
     }
 
     function handleContentChange(event: React.FormEvent<HTMLDivElement>){
-
         setContent(event.currentTarget.innerHTML);
     }
 
     useEffect(() => {
         const contentDiv = document.getElementById("content");
         setContent(props.entity.content);
-
         if(contentDiv) contentDiv.innerHTML = props.entity.content || "";
+        setCommunityId(props.entity.communityId);
     }, [props.entity])
 
     function savePost(){
@@ -146,11 +145,10 @@ function Editor(props: any){
             id: props.entity.id,
             title: title,
             content: content,
-            communityId: 7
+            community_id: communityId
         };
 
         postsApi.edit(post).then((response) => {
-            console.log(response);
             setIsSaved(true);
         }).catch((error) => {
             handleError(error);
@@ -231,7 +229,7 @@ function Editor(props: any){
 
     if(isLoading){
         status = (
-            <Button className={classes.status} variant="contained" color="primary">
+            <Button variant="contained" color="primary">
                 Saving...
             </Button>
         );
@@ -239,7 +237,7 @@ function Editor(props: any){
         if(isSaved){
             status = (
                 <>
-                    <Button onClick={savePost} className={classes.status} variant="contained" color="primary">
+                    <Button onClick={savePost} variant="contained" color="primary">
                         Save
                         <SaveIcon></SaveIcon>
                     </Button>
@@ -248,7 +246,7 @@ function Editor(props: any){
         }else{
             status = (
                 <>
-                    <Button className={classes.status} variant="contained" color="primary">
+                    <Button variant="contained" color="primary">
                         Unauthorized to save
                         <ErrorIcon></ErrorIcon>
                     </Button>
@@ -299,9 +297,15 @@ function Editor(props: any){
                         </MenuItem>
                     ))}
                 </Menu>
-                {
-                    status
-                }
+                <div className={classes.leftToolbar}>
+                    <SelectCommunity communityId={communityId} setCommunityId={setCommunityId}></SelectCommunity>
+                    {
+                        status
+                    }
+                </div>
+{
+    communityId
+}
             </Toolbar>
             <div id="title"
                 onMouseOver={editTitle}
