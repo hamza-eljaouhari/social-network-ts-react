@@ -79,13 +79,13 @@ function Editor(props: any){
             setTitle(response.data.title || response.data.name);
             setContent(response.data.content || "");
             setCommunityId(response.data.communityId);
-
+            setIsSaved(true);
             if(contentDiv) contentDiv.innerHTML = response.data.content || "";
             if(titleDiv) titleDiv.innerText = response.data.title || "";
         }).catch((error) => {
             handleError(error);
         })
-    }, [])
+    }, [props.match.params.id])
 
     function savePost(){
         setIsLoading(true);

@@ -3,6 +3,13 @@ import {
   Route,
 } from "react-router-dom";
 
+import { connect } from "react-redux";
+
+import { 
+  setIsAuthenticated, 
+  setAuthenticationToken 
+} from "./redux/reducers/authentication/actions";
+
 import './App.css';
 import React, {useEffect} from "react";
 import axios from "./axios";
@@ -28,11 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppProps{
-  history: any
-}
-
-function App(props : AppProps) {
+function App(props : any) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -46,7 +49,9 @@ function App(props : AppProps) {
         if(['/login', '/register'].includes(props.history.location.pathname)){
           // props.history.push('/home');
         }
-        localStorage.setItem("isAuthenticated", "true");
+
+          props.setIsAuthenticated(true);
+          props.setAuthenticationToken(localStorage.getItem("token"));
       }
     }).catch((error) => {
       // props.history.push('/login');
@@ -88,4 +93,18 @@ function App(props : AppProps) {
   );
 }
 
-export default withRouter(App);
+
+const mapStateToProps = (state: any) => {
+  return {
+    isAuthenticated: state.authenticationReducer.isAuthenticated
+  };
+};
+
+
+function mapDispatchToProps(dispatch: any) {
+  return {
+      setIsAuthenticated: (isAuthenticated: boolean) => dispatch(setIsAuthenticated(isAuthenticated)),
+      setAuthenticationToken: (token: string) => dispatch(setAuthenticationToken(token))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

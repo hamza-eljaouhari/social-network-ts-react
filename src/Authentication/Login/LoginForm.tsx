@@ -9,7 +9,6 @@ import handleError from "../../utils/handleError";
 import { connect } from "react-redux";
 
 import { setIsAuthenticated, setAuthenticationToken } from "../../redux/reducers/authentication/actions";
-import axios from "../../axios";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
