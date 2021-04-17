@@ -78,8 +78,8 @@ export default function CreateButton() {
     setIsLoading(true);
   
     postsApi.create().then((response) => {
-        console.log(response)
         setIsLoading(false);
+
         history.push("/posts/" + response.data.id)
     }).catch((error) => {
         handleError(error)

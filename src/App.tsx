@@ -12,9 +12,7 @@ import {
 
 import './App.css';
 import React, {useEffect} from "react";
-import axios from "./axios";
 
-import Header from './Partials/Header/Header';
 import Register from './Authentication/Register/Register';
 import Login from './Authentication/Login/Login';
 import Sidebar from './Partials/Sidebar/Sidebar';
@@ -30,18 +28,12 @@ import EntityEditor from "./Editor/EntityEditor"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: "50px 150px"
     },
   }),
 );
 
 function App(props : any) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  function toggleSidebar(isOpen: boolean){
-    setOpen(isOpen);
-  }
 
   useEffect(() => {
     authenticator.checkIfAuthenticated().then((response) => {
@@ -60,36 +52,38 @@ function App(props : any) {
   }, [props.history])
   
   return (
-      <main className="App">
-        <Header toggle={toggleSidebar}/>
-        <Sidebar open={open} setOpen={toggleSidebar}/>
-        <section className={classes.root}>
-          <Switch>
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            {/* <Route path="/posts/:id">
-              <PostArticle className={classes.root}/>
-            </Route> */}
-            <Route path="/posts/:id">
-              <EntityEditor entityType="posts"/>
-            </Route>
-            <Route path="/communities/:id">
-              <EntityEditor entityType="communities"/>
-            </Route>
+    <>
+      <Sidebar>
+        <main className="App">
+          <section className={classes.root}>
+            <Switch>
+              <Route path="/register">
+                <Register />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              {/* <Route path="/posts/:id">
+                <PostArticle className={classes.root}/>
+              </Route> */}
+              <Route path="/posts/:id">
+                <EntityEditor entityType="posts"/>
+              </Route>
+              <Route path="/communities/:id">
+                <EntityEditor entityType="communities"/>
+              </Route>
 
-            <Route path="/posts">
-              <Entities />
-            </Route>
-            <Route path="/communities">
-              <Entities />
-            </Route>
-          </Switch>
-        </section>
-      </main>
+              <Route path="/posts">
+                <Entities />
+              </Route>
+              <Route path="/communities">
+                <Entities />
+              </Route>
+            </Switch>
+          </section>
+        </main>
+     </Sidebar>
+    </>
   );
 }
 

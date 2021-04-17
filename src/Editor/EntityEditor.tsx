@@ -16,7 +16,6 @@ function PostEditor(props: any){
     function getPost(id: number){
         postsApi.getById(id).then((response) => {
             setEntity(response.data);
-            console.log("reeeeeeeees posts", response.data)
         }).catch((error) => {
             handleError(error);
         })
@@ -25,7 +24,6 @@ function PostEditor(props: any){
     function getCommunity(id: number){
         communitiesApi.getById(id).then((response) => {
             setEntity(response.data);
-            console.log("reeeeeeeees comm", response.data)
         }).catch((error) => {
             handleError(error);
         })
@@ -43,7 +41,6 @@ function PostEditor(props: any){
 
     useEffect(() => {
         getEntity();
-        console.log(props.match.params.id + "         id")
     }, [props.match.params.id])
 
     return(

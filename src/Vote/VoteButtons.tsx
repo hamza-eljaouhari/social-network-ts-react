@@ -2,6 +2,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import votesApi from '../api/votes';
+import handleError from "../utils/handleError";
 
 interface VoteButtonsProps {
     postId: number,
@@ -37,7 +38,7 @@ function VoteButtons(props: VoteButtonsProps){
             });
 
         }).catch((error) => {
-            console.log(error)
+            handleError(error)
         })
     }
 

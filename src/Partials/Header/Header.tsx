@@ -93,24 +93,21 @@ function Header(props: any) {
     <div className={classes.root}>
         <AppBar position="static" >
           <Toolbar className={classes.toolbar}>
-            <IconButton edge="start" onClick={() => toggle(true)} className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-              <div>
-                {
-                  isAuthenticated &&
-                  <CreateButton></CreateButton>
-                }
-                {
-                  chatLink()
-                }
-                {
-                  loginLink()
-                }
-                {
-                  registerLink()
-                }
-              </div>
+            <div>
+              {
+                isAuthenticated &&
+                <CreateButton></CreateButton>
+              }
+              {
+                chatLink()
+              }
+              {
+                loginLink()
+              }
+              {
+                registerLink()
+              }
+            </div>
           </Toolbar>
         </AppBar>
     </div>
