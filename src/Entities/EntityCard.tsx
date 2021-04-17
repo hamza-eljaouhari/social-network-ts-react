@@ -54,16 +54,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface PostProps {
-  post: any,
-  setVote: any
+interface EntityProps {
+  setVote: any,
+  entity: any
 }
 
-function Post(props: PostProps) {
+function Entity(props: EntityProps) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
-  const { post, setVote } = props;
+  const { entity, setVote } = props;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -75,14 +75,14 @@ function Post(props: PostProps) {
 
   return (
       <Card className={classes.root}>
-        <Link to={"/posts/" + post.id} style={{textDecoration: "none"}}>
+        <Link to={"/posts/" + entity.id} style={{textDecoration: "none"}}>
 
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
-              {
-                post.owner.id
-              }
+              {/* {
+                entity.owner.id
+              } */}
             </Avatar>
           }
           action={
@@ -90,8 +90,8 @@ function Post(props: PostProps) {
               <MoreVertIcon />
             </IconButton>
           }
-          title={"From : " + post.owner.email} 
-          subheader={"Created on : " + formatMySQLDate(post.createdAt) + " and updated on " + formatMySQLDate(post.updatedAt)}
+          // title={"From : " + post.owner.email} 
+          subheader={"Created on : " + formatMySQLDate(entity.createdAt) + " and updated on " + formatMySQLDate(entity.updatedAt)}
         />
         <CardMedia
           className={classes.media}
@@ -101,14 +101,14 @@ function Post(props: PostProps) {
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
             {
-              post.title
+              entity.title
             }
           </Typography>
         </CardContent>
       </Link>
 
         <CardActions disableSpacing>
-          <VoteButtons postId={post.id} setVote={(vote: any) => callSetVoteParent(vote)} vote={post.vote}></VoteButtons>
+          {/* <VoteButtons postId={entity.id} setVote={(vote: any) => callSetVoteParent(vote)} vote={entity.vote}></VoteButtons> */}
           <IconButton aria-label="share">
             <ShareIcon />
           </IconButton>
@@ -154,4 +154,4 @@ function Post(props: PostProps) {
   );
 }
 
-export default Post;
+export default Entity;

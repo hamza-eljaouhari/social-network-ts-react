@@ -1,5 +1,6 @@
 import axios from '../axios';
 import UpdatePostApiRequest from "../Types/UpdatePostApiRequest";
+import PaginatePostsApiRequest from "../Types/PaginatePostsApiRequest";
 
 const postsApi = {
     getAll: async (): Promise<any> => {
@@ -11,8 +12,11 @@ const postsApi = {
     edit: async (post: UpdatePostApiRequest): Promise<any> => {
         return await axios.patch("/posts/" + post.id, post)
     },
-    geptById: async (id: number): Promise<any> => {
+    getById: async (id: number): Promise<any> => {
         return await axios.get("/posts/" + id)
+    },
+    paginate: async (request: PaginatePostsApiRequest): Promise<any> => {
+        return await axios.get("/posts/" + request.page_number + "/" + request.per_page)
     }
 }
 

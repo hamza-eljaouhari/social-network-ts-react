@@ -9,8 +9,6 @@ import React, {useEffect} from "react";
 import Header from './Partials/Header/Header';
 import Register from './Authentication/Register/Register';
 import Login from './Authentication/Login/Login';
-import Home from './Home/Home';
-import PostArticle from './Posts/Post/Article';
 import Sidebar from './Partials/Sidebar/Sidebar';
 
 import { withRouter } from "react-router-dom";
@@ -18,8 +16,8 @@ import { withRouter } from "react-router-dom";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import authenticator from "./api/authenticate";
 
-import PostEditor from "./Editor/Post/PostEditor";
-import CommunityEditor from "./Editor/Community/CommunityEditor";
+import Entities from "./Entities/Entities";
+import Editor from "./Editor/Editor"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,17 +65,21 @@ function App(props : AppProps) {
             <Route path="/login">
               <Login />
             </Route>
-            <Route path="/home">
-              <Home/>
-            </Route>
             {/* <Route path="/posts/:id">
               <PostArticle className={classes.root}/>
             </Route> */}
             <Route path="/posts/:id">
-              <PostEditor />
+              <Editor />
             </Route>
             <Route path="/communities/:id">
-              <CommunityEditor/>
+              <Editor/>
+            </Route>
+
+            <Route path="/posts">
+              <Entities />
+            </Route>
+            <Route path="/communities">
+              <Entities />
             </Route>
           </Switch>
         </section>

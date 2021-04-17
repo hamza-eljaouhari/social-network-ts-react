@@ -1,5 +1,6 @@
 import axios from '../axios';
 import UpdateCommunityApiRequest from "../Types/UpdateCommunityApiRequest";
+import PaginateCommunitiesApiRequest from "../Types/PaginateCommunitiesApiRequest";
 
 const communitiesApi = {
     getAll: async (): Promise<any> => {
@@ -14,6 +15,12 @@ const communitiesApi = {
             content: community.content
         })
     },
+    getById: async (id: number): Promise<any> => {
+        return await axios.get("/communities/" + id)
+    },
+    paginate: async (request: PaginateCommunitiesApiRequest): Promise<any> => {
+        return await axios.get("/communities/" + request.page_number + "/" + request.per_page)
+    }
 }
 
 export default communitiesApi;
