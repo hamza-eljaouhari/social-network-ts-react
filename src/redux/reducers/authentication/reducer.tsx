@@ -1,7 +1,8 @@
 import ReducerActionType from '../../ReducerActionType'; 
 
 const authenticationReducer = (state = {
-  isAuthenticated: false
+  isAuthenticated: false,
+  token: ""
 }, action : ReducerActionType) => {
   switch (action.type) {
     case 'SET_AUTHENTICATION_TOKEN':

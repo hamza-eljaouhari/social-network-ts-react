@@ -5,6 +5,7 @@ import {
 
 import './App.css';
 import React, {useEffect} from "react";
+import axios from "./axios";
 
 import Header from './Partials/Header/Header';
 import Register from './Authentication/Register/Register';
@@ -43,12 +44,12 @@ function App(props : AppProps) {
     authenticator.checkIfAuthenticated().then((response) => {
       if(response.data.success){
         if(['/login', '/register'].includes(props.history.location.pathname)){
-          props.history.push('/home');
+          // props.history.push('/home');
         }
         localStorage.setItem("isAuthenticated", "true");
       }
     }).catch((error) => {
-      props.history.push('/login');
+      // props.history.push('/login');
       localStorage.setItem("isAuthenticated", "false");
     })
   }, [props.history])

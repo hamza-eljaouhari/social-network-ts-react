@@ -73,11 +73,15 @@ function Editor(props: any){
         const { id } = props.match.params;
         postsApi.getById(id).then((response) => {
             const contentDiv = document.getElementById("content");
+            const titleDiv = document.getElementById("title");
+            
             setId(response.data.id);
             setTitle(response.data.title || response.data.name);
-            setContent(response.data.content ||"");
-            if(contentDiv) contentDiv.innerHTML = response.data.content || "";
+            setContent(response.data.content || "");
             setCommunityId(response.data.communityId);
+
+            if(contentDiv) contentDiv.innerHTML = response.data.content || "";
+            if(titleDiv) titleDiv.innerText = response.data.title || "";
         }).catch((error) => {
             handleError(error);
         })

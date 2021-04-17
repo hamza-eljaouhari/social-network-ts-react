@@ -26,18 +26,7 @@ const authenticator = {
         });
     },
     checkIfAuthenticated: async (): Promise<any> => {
-
-        const token = localStorage.getItem("token");
-
-        if(token === undefined){
-            return Promise.reject(false);
-        }
-        
-        return await axios.post("/user/checkJWT", {
-            headers: {
-                'Authorization': token
-            }
-        });
+        return await axios.post("/user/checkJWT")
     }
 }
 

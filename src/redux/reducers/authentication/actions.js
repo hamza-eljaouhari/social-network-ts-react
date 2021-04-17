@@ -3,7 +3,7 @@ import {
   SET_IS_AUTHENTICATED
  } from "../../actionTypes";
 
-export const setAuthentiationToken = (token) => ({
+export const setAuthenticationToken = (token) => ({
   type: SET_AUTHENTICATION_TOKEN,
   payload: { token }
 });
