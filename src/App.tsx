@@ -55,7 +55,7 @@ function App(props : AppProps) {
   
   return (
       <main className="App">
-        <Header toggleSidebar={toggleSidebar}/>
+        <Header toggle={toggleSidebar}/>
         <Sidebar open={open} setOpen={toggleSidebar}/>
         <section className={classes.root}>
           <Switch>

@@ -6,6 +6,10 @@ import { useHistory } from "react-router-dom";
 import authenticator from "../../api/authenticate";
 import handleError from "../../utils/handleError";
 
+import { connect } from "react-redux";
+
+import { setIsAuthenticated } from "../../redux/reducers/authentication/actions";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
@@ -17,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function LoginForm() {
+function LoginForm(props: any) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -41,7 +45,9 @@ function LoginForm() {
         authenticator.authenticate(credentials).then((response: any) => {
             history.push("/home");
             localStorage.setItem("token", response.data.access_token);
+            props.setIsAuthenticated(true)
         }).catch((error: any) => {
+            props.setIsAuthenticated(false)
             handleError(error);
         });
     }
@@ -57,4 +63,10 @@ function LoginForm() {
     );
 }
 
-export default LoginForm;
+function mapDispatchToProps(dispatch: any) {
+    return {
+      setIsAuthenticated: (isAuthenticated: boolean) => dispatch(setIsAuthenticated(isAuthenticated))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(LoginForm);

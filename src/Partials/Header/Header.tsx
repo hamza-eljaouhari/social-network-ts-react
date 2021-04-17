@@ -1,3 +1,6 @@
+import React from "react";
+import { connect } from "react-redux";
+
 import {
   Link,
 } from "react-router-dom";
@@ -8,11 +11,17 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChatIcon from '@material-ui/icons/Chat';
-import isAuthenticated from '../../utils/isAuthenticated';
 
 import routerLinkStyleConfiguration from '../../utils/routerLinkStyleConfiguration'
 
 import CreateButton from "../CreateButton/CreateButton";
+import { Typography } from "@material-ui/core";
+
+import isOnPage from '../../utils/isOnPage'
+
+import {
+  withRouter
+} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,34 +40,51 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface HeaderProps {
-  toggleSidebar: (isOpen: boolean) => void;
-}
-
-
-function Header(props : HeaderProps) {
+function Header(props: any) {
   const classes = useStyles();
 
-  const { toggleSidebar } = props;
+  const { toggle, history, isAuthenticated } = props;
   
-  function loginLink(){
-    if(!isAuthenticated()){
+  function registerLink(){
+    if(isAuthenticated){
+      return;
+    }
+
+    if(isOnPage("/login", history)){
       return (
-        <Link to="/chat" style={routerLinkStyleConfiguration()}>
-          Login
-        </Link>
+          <Link to="/register" style={routerLinkStyleConfiguration()}>
+            <Typography component="h6">
+              Register
+            </Typography>
+          </Link>
+      )
+    }
+  }
+
+  function loginLink(){
+    if(isAuthenticated){
+      return;
+    }
+
+    if(isOnPage("/register", history)){
+      return (
+          <Link to="/login" style={routerLinkStyleConfiguration()}>
+            <Typography component="h6">
+              Login
+            </Typography>
+          </Link>
       )
     }
   }
 
   function chatLink(){
-    if(isAuthenticated()){
+    if(isAuthenticated){
       return (
-        <Link to="/chat" onClick={() => alert("Chat is not yet implemented")} style={routerLinkStyleConfiguration()}>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="menu">
-            <ChatIcon />
-          </IconButton>
-        </Link>
+          <Link to="/chat" onClick={() => alert("Chat is not yet implemented")} style={routerLinkStyleConfiguration()}>
+            <IconButton className={classes.menuButton} color="inherit" aria-label="menu">
+              <ChatIcon />
+            </IconButton>
+          </Link>
       );
     }
   }
@@ -67,16 +93,22 @@ function Header(props : HeaderProps) {
     <div className={classes.root}>
         <AppBar position="static" >
           <Toolbar className={classes.toolbar}>
-            <IconButton edge="start" onClick={() => toggleSidebar(true)} className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton edge="start" onClick={() => toggle(true)} className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
               <div>
-                <CreateButton></CreateButton>
+                {
+                  isAuthenticated &&
+                  <CreateButton></CreateButton>
+                }
                 {
                   chatLink()
                 }
                 {
                   loginLink()
+                }
+                {
+                  registerLink()
                 }
               </div>
           </Toolbar>
@@ -85,4 +117,10 @@ function Header(props : HeaderProps) {
   );
 }
 
-export default Header;
+const mapStateToProps = (state: any) => {
+  console.log("state", state)
+  return {
+    isAuthenticated: state.authenticationReducer.isAuthenticated
+  };
+};
+export default connect(mapStateToProps)(withRouter(Header));

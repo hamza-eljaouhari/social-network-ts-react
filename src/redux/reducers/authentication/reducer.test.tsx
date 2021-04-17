@@ -9,7 +9,9 @@ describe('todos reducer', () => {
 
   it('should handle SET_AUTHENTICATION_TOKEN', () => {
     expect(
-      authenticationReducer([], {
+      authenticationReducer({
+        isAuthenticated: false
+      }, {
         type: 'SET_AUTHENTICATION_TOKEN',
         payload: {
           token: 'token'
