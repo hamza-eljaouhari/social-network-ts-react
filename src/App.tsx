@@ -74,10 +74,10 @@ function App(props : any) {
               </Route>
 
               <Route path="/posts">
-                <Entities />
+                <Entities entityType="posts"/>
               </Route>
               <Route path="/communities">
-                <Entities />
+                <Entities entityType="communities" />
               </Route>
             </Switch>
           </section>

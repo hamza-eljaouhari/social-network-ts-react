@@ -47,11 +47,6 @@ function Entities(props: any){
     }
 
     useEffect(() => {
-      getAll({
-        per_page: DEFAULT_PER_PAGE,
-        page_number: page
-      });
-
       window.addEventListener("scroll", infinitePaging)
     }, [])
 
@@ -83,20 +78,32 @@ function Entities(props: any){
     }
 
     function getAll(data: any){
-
       if(props.match.path === "/posts"){
         getPosts(data);
       }else{
         getCommunities(data);
       }
-    } 
+    }
+
+    useEffect(() => {
+      alert(props.entityType)
+      setPage(1);
+      getAll({
+        page_number: 1,
+        per_page: DEFAULT_PER_PAGE
+      })
+    }, [props.entityType])
 
     function getCommunities(data: any){
       communitiesApi.paginate(data).then((response) =>{
-        setEntities([
-          ...entities,
-          ...response.data.rows
-        ]);
+        if(data.page_number === 1){
+          setEntities(response.data.rows);
+        }else{
+          setEntities([
+            ...entities,
+            ...response.data.rows
+          ]);
+        }
       }).catch((error) => {
         console.log(error);
       })
@@ -104,10 +111,14 @@ function Entities(props: any){
 
     function getPosts(data: any){
       postsApi.paginate(data).then((response) =>{
-        setEntities([
-          ...entities,
-          ...response.data.rows
-        ]);
+        if(data.page_number === 1){
+          setEntities(response.data.rows);
+        }else{
+          setEntities([
+            ...entities,
+            ...response.data.rows
+          ]);
+        }
       }).catch((error) => {
         console.log(error);
       })
