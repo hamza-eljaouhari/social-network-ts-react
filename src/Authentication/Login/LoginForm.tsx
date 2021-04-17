@@ -8,6 +8,8 @@ import handleError from "../../utils/handleError";
 
 import { connect } from "react-redux";
 
+import axios from "../../axios";
+
 import { setIsAuthenticated, setAuthenticationToken } from "../../redux/reducers/authentication/actions";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,6 +52,9 @@ function LoginForm(props: any) {
             localStorage.setItem("token", token);
             props.setIsAuthenticated(true)
             props.setToken(token);
+
+            axios.defaults.headers.common['Authorization'] = token;
+                
             history.push("/home");
 
         }).catch((error: any) => {

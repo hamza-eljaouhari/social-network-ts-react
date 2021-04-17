@@ -25,7 +25,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import authenticator from "./api/authenticate";
 
 import Entities from "./Entities/Entities";
-import Editor from "./Editor/Editor"
+import EntityEditor from "./Editor/EntityEditor"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +54,7 @@ function App(props : any) {
           props.setAuthenticationToken(localStorage.getItem("token"));
       }
     }).catch((error) => {
-      // props.history.push('/login');
+      props.history.push('/login');
       localStorage.setItem("isAuthenticated", "false");
     })
   }, [props.history])
@@ -75,10 +75,10 @@ function App(props : any) {
               <PostArticle className={classes.root}/>
             </Route> */}
             <Route path="/posts/:id">
-              <Editor />
+              <EntityEditor entityType="posts"/>
             </Route>
             <Route path="/communities/:id">
-              <Editor/>
+              <EntityEditor entityType="communities"/>
             </Route>
 
             <Route path="/posts">

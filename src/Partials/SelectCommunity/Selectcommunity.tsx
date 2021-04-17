@@ -58,8 +58,8 @@ function SelectCommunity(props: any){
             >
             <option aria-label="Uncategorized" value="0">Unacategorized</option>
             {
-                communities.map((community: {id: number, name: string, postCount: number}) => {
-                    return <option key={community.id} value={community.id}>{community.name}</option>
+                communities.map((community: {id: number, title: string, postCount: number}) => {
+                    return <option key={community.id} value={community.id}>{community.title}</option>
                 })
             }
             </Select>

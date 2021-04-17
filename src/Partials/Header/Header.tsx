@@ -17,7 +17,7 @@ import routerLinkStyleConfiguration from '../../utils/routerLinkStyleConfigurati
 import CreateButton from "../CreateButton/CreateButton";
 import { Typography } from "@material-ui/core";
 
-import isOnPage from '../../utils/isOnPage'
+import isOnPages from '../../utils/isOnPages'
 
 import {
   withRouter
@@ -50,7 +50,7 @@ function Header(props: any) {
       return;
     }
 
-    if(isOnPage("/login", history)){
+    if(isOnPages(["/login"], history)){
       return (
           <Link to="/register" style={routerLinkStyleConfiguration()}>
             <Typography component="h6">
@@ -66,7 +66,7 @@ function Header(props: any) {
       return;
     }
 
-    if(isOnPage("/register", history)){
+    if(isOnPages(["/register", "/"], history)){
       return (
           <Link to="/login" style={routerLinkStyleConfiguration()}>
             <Typography component="h6">

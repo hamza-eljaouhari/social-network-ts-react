@@ -1,9 +1,9 @@
-import Editor from "../Partials/Editor/Editor";
 import React, { useEffect } from "react";
 
 import postsApi from "../api/posts";
 import communitiesApi from "../api/communities";
 import handleError from "../utils/handleError";
+import Editor from "./Editor";
 
 import {
     withRouter 
@@ -12,11 +12,11 @@ import {
 function PostEditor(props: any){
 
     const [entity, setEntity] = React.useState<any>({});
-    
+
     function getPost(id: number){
         postsApi.getById(id).then((response) => {
-            console.log(response.data);
             setEntity(response.data);
+            console.log("reeeeeeeees posts", response.data)
         }).catch((error) => {
             handleError(error);
         })
@@ -24,8 +24,8 @@ function PostEditor(props: any){
 
     function getCommunity(id: number){
         communitiesApi.getById(id).then((response) => {
-            console.log(response.data);
             setEntity(response.data);
+            console.log("reeeeeeeees comm", response.data)
         }).catch((error) => {
             handleError(error);
         })
@@ -33,13 +33,17 @@ function PostEditor(props: any){
 
     function getEntity(){
         const { id } = props.match.params;
-        
-        console.log(props)
 
+        if(props.entityType === "posts"){
+            getPost(id);
+        }else{
+            getCommunity(id);
+        }
     }
 
     useEffect(() => {
         getEntity();
+        console.log(props.match.params.id + "         id")
     }, [props.match.params.id])
 
     return(

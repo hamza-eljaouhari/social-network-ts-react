@@ -56,11 +56,14 @@ function Editor(props: any){
     const [isContentEditable, setIsContentEditable] = React.useState<boolean>(false);
     const [isTitleEditable, setIsTitleEditable] = React.useState<boolean>(false);
     
-    const [id, setId] = React.useState<number>(0);
+    const { entity } = props;
+
+    const [id, setId] = React.useState<number>(1);
     const [title, setTitle] = React.useState<string>("");
     const [content, setContent] = React.useState<string>("");
-    const [communityId, setCommunityId] = React.useState<number>(0);
+    const [communityId, setCommunityId] = React.useState<number>(1);
 
+    
     function handleTitleChange(event: React.FormEvent<HTMLDivElement>){
         setTitle(event.currentTarget.innerText);
     }
@@ -70,22 +73,17 @@ function Editor(props: any){
     }
 
     useEffect(() => {
-        const { id } = props.match.params;
-        postsApi.getById(id).then((response) => {
-            const contentDiv = document.getElementById("content");
-            const titleDiv = document.getElementById("title");
-            
-            setId(response.data.id);
-            setTitle(response.data.title || response.data.name);
-            setContent(response.data.content || "");
-            setCommunityId(response.data.communityId);
-            setIsSaved(true);
-            if(contentDiv) contentDiv.innerHTML = response.data.content || "";
-            if(titleDiv) titleDiv.innerText = response.data.title || "";
-        }).catch((error) => {
-            handleError(error);
-        })
-    }, [props.match.params.id])
+        const contentDiv = document.getElementById("content");
+        const titleDiv = document.getElementById("title");
+
+        if(contentDiv) contentDiv.innerHTML = entity.content || "";
+        if(titleDiv) titleDiv.innerText = entity.title || "";
+        console.log("entitit" ,entity)
+        setId(entity.id);
+        setTitle(entity.title);
+        setContent(entity.content);
+        setCommunityId(entity.communityId || entity.id)
+    }, [entity])
 
     function savePost(){
         setIsLoading(true);
@@ -151,6 +149,7 @@ function Editor(props: any){
             event.preventDefault();
         }
     }
+
     return(
         <article>
             <EditorToolbar 

@@ -21,7 +21,7 @@ import {
     withRouter
 } from "react-router-dom";
 
-import SelectCommunity from "../../Partials/SelectCommunity/Selectcommunity";
+import SelectCommunity from "../SelectCommunity/Selectcommunity";
 
 const fontSize = 24;
 const ITEM_HEIGHT = 48;
@@ -303,9 +303,6 @@ function Editor(props: any){
                         status
                     }
                 </div>
-{
-    communityId
-}
             </Toolbar>
             <div id="title"
                 onMouseOver={editTitle}
