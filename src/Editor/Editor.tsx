@@ -78,7 +78,7 @@ function Editor(props: any){
 
         if(contentDiv) contentDiv.innerHTML = entity.content || "";
         if(titleDiv) titleDiv.innerText = entity.title || "";
-        console.log("entitit" ,entity)
+
         setId(entity.id);
         setTitle(entity.title);
         setContent(entity.content);

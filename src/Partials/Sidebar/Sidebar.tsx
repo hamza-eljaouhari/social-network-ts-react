@@ -13,6 +13,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Header from "../Header/Header";
+import sideBarLinkStyleConfiguration from "../../utils/sideBarLinkStyleConfiguration";
+
+import {
+  Link
+} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -36,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      padding: "50px",
+      padding: "30px",
     },
   }),
 );
@@ -60,22 +65,18 @@ export default function ClippedDrawer(props: any) {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+            {[['Feed', '/posts'], ['Communities', '/communities'], ['Drafts', '/posts/drafts'], ['Profile', '/profile'], ['Settings', '/setting']].map((menuItem, index) => (
+                <Link to={menuItem[1]} style={sideBarLinkStyleConfiguration()}>
+                  <ListItem button key={menuItem[1]}>
+                    <ListItemIcon>
+                      <InboxIcon></InboxIcon>  
+                    </ListItemIcon>
+                  <ListItemText primary={menuItem[0]} />
+                </ListItem>
+              </Link>
             ))}
           </List>
           <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
         </div>
       </Drawer>
       <main className={classes.content}>
